@@ -1,0 +1,65 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Customer Demo ",
+		"_postman_id": "1828d880-940d-e16b-4bc5-803af4914adf",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Customers",
+			"request": {
+				"url": "http://customerapi.azurewebsites.net/api/customers",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customer 3",
+			"request": {
+				"url": "http://customerapi.azurewebsites.net/api/customers/3",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customer 3 (Png)",
+			"request": {
+				"url": "http://customerapi.azurewebsites.net/api/customers/3",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "image/png",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
