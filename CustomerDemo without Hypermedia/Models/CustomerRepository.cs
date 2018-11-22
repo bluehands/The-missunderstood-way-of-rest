@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 
 namespace CustomerDemo.Models
 {
@@ -35,7 +36,7 @@ namespace CustomerDemo.Models
                 City = "Quantico",
                 ZipCode = "VA22134",
                 Country = "USA",
-                //Image = Properties.Resource.gentleman,
+                //Image =  Manning,
             });
             s_Customers.Add(4, new Customer
             {
@@ -46,8 +47,13 @@ namespace CustomerDemo.Models
                 ZipCode = "3844",
                 Country = "NL",
             });
-            //s_Customers[3].Image = Image.FromFile(@"..\Images\gentleman.jpg");
-            s_Customers[3].ImageFile = @"Images\Manning.jpg";
+            var assembly = Assembly.GetEntryAssembly();
+            var resourceStream = assembly.GetManifestResourceStream("CustomerDemo.Images.Manning.jpg");
+            s_Customers[3].Image = Image.FromStream(resourceStream);
+
+
+            //s_Customers[3].Image = Image.FromFile(@"..\Images\Manning.jpg");
+            //s_Customers[3].ImageFile = @"Images\Manning.jpg";
         }
         public static List<Customer> GetAll()
         {

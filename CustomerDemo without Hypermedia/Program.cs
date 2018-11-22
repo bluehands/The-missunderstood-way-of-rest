@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 
-namespace CustomerDemo_without_Hypermedia
+namespace CustomerDemo
 {
     public class Program
     {

@@ -14,27 +14,30 @@ namespace CustomerDemo.Controllers
 {
     public class CustomerImageFormatter : OutputFormatter
     {
-        private readonly IHostingEnvironment m_HostingEnvironment;
-        private static readonly MediaTypeHeaderValue MediaType = new MediaTypeHeaderValue("image/png");
 
-        public CustomerImageFormatter(IHostingEnvironment hostingEnvironment)
+
+        public CustomerImageFormatter()
         {
-            m_HostingEnvironment = hostingEnvironment;
-            SupportedMediaTypes.Add(MediaType);
+            SupportedMediaTypes.Add("image/png");
+            SupportedMediaTypes.Add("image/jpeg");
         }
 
+        protected override bool CanWriteType(Type type)
+        {
+            if (typeof(Customer).IsAssignableFrom(type))
+            {
+                return base.CanWriteType(type);
+            }
+            return false;
+        }
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
-            var stream = context.HttpContext.Response.Body;
+            var response = context.HttpContext.Response;
             var c = context.Object as Customer;
-            //c?.Image?.Save(stream, ImageFormat.Jpeg);
-            if (!string.IsNullOrEmpty(c?.ImageFile))
-            {
-                var buf = File.ReadAllBytes(Path.Combine(m_HostingEnvironment.WebRootPath, c.ImageFile));
-                stream.Write(buf, 0, buf.Length);
-            }
-            //stream.Position = 0;
-            return Task.FromResult(stream);
+
+            return Task.Run(() => c?.Image?.Save(response.Body, ImageFormat.Jpeg));
+
         }
+
     }
 }

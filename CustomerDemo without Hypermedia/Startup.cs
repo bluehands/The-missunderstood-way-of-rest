@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace CustomerDemo_without_Hypermedia
+namespace CustomerDemo
 {
     public class Startup
     {
@@ -37,7 +37,7 @@ namespace CustomerDemo_without_Hypermedia
                 options =>
                 {
                     options.OutputFormatters.Add(new Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter());
-                    options.OutputFormatters.Add(new CustomerDemo.Controllers.CustomerImageFormatter(m_Env));
+                    options.OutputFormatters.Add(new Controllers.CustomerImageFormatter());
                 }
                 );
         }
