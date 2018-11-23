@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace CustomerDemo.Models
 {
@@ -12,8 +11,6 @@ namespace CustomerDemo.Models
         public string City { get; set; }
         public string Country { get; set; }
         
-        [IgnoreDataMember]
-        public Image Image { get; set; }
         [IgnoreDataMember]
         public string ImageFile { get; set; }
 

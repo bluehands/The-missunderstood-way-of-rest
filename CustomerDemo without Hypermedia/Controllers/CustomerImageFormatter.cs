@@ -14,10 +14,10 @@ namespace CustomerDemo.Controllers
 {
     public class CustomerImageFormatter : OutputFormatter
     {
-
-
-        public CustomerImageFormatter()
+        public IHostingEnvironment HostingEnvironment { get; }
+        public CustomerImageFormatter(IHostingEnvironment hostingEnvironment)
         {
+            HostingEnvironment = hostingEnvironment;
             SupportedMediaTypes.Add("image/png");
             SupportedMediaTypes.Add("image/jpeg");
         }
@@ -32,10 +32,17 @@ namespace CustomerDemo.Controllers
         }
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
-            var response = context.HttpContext.Response;
+            var responseStream = context.HttpContext.Response.Body;
             var c = context.Object as Customer;
 
-            return Task.Run(() => c?.Image?.Save(response.Body, ImageFormat.Jpeg));
+            if (!string.IsNullOrEmpty(c?.ImageFile))
+            {
+                var rootPath = Path.Combine(HostingEnvironment.WebRootPath, "Images");
+                var imagePath = Path.Combine(rootPath, c.ImageFile);
+                var buf = File.ReadAllBytes(imagePath);
+                responseStream.Write(buf, 0, buf.Length);
+            }
+            return Task.FromResult(responseStream);
 
         }
 

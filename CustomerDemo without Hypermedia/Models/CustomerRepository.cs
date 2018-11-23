@@ -36,7 +36,7 @@ namespace CustomerDemo.Models
                 City = "Quantico",
                 ZipCode = "VA22134",
                 Country = "USA",
-                //Image =  Manning,
+                ImageFile = "Manning.jpg"
             });
             s_Customers.Add(4, new Customer
             {
@@ -47,34 +47,59 @@ namespace CustomerDemo.Models
                 ZipCode = "3844",
                 Country = "NL",
             });
-            var assembly = Assembly.GetEntryAssembly();
-            var resourceStream = assembly.GetManifestResourceStream("CustomerDemo.Images.Manning.jpg");
-            s_Customers[3].Image = Image.FromStream(resourceStream);
 
-
-            //s_Customers[3].Image = Image.FromFile(@"..\Images\Manning.jpg");
-            //s_Customers[3].ImageFile = @"Images\Manning.jpg";
         }
         public static List<Customer> GetAll()
         {
-            return new List<Customer>(s_Customers.Values);
+            lock (s_Customers)
+            {
+                return new List<Customer>(s_Customers.Values);
+            }
         }
         public static Customer Get(int id)
         {
-            return s_Customers[id];
+            lock (s_Customers)
+            {
+                return s_Customers[id];
+            }
         }
-        public static void Add(Customer customer)
+        public static bool TryGet(int id, out Customer customer)
         {
-            s_Customers.Add(customer.Id, customer);
+            lock (s_Customers)
+            {
+                if (s_Customers.ContainsKey(id))
+                {
+                    customer = Get(id);
+                    return true;
+                }
+            }
+            customer = null;
+            return false;
+        }
+        public static int Add(Customer customer)
+        {
+            lock (s_Customers)
+            {
+                customer.Id = s_Customers.Count + 1;
+                s_Customers.Add(customer.Id, customer);
+                return customer.Id;
+            }
         }
         public static void Update(Customer customer)
         {
-            s_Customers[customer.Id] = customer;
+            lock (s_Customers)
+            {
+                s_Customers[customer.Id] = customer;
+            }
         }
         public static void Delete(int id)
         {
-            s_Customers.Remove(id);
+            lock (s_Customers)
+            {
+                s_Customers.Remove(id);
+            }
         }
+
 
 
     }

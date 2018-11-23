@@ -24,9 +24,11 @@ namespace CustomerDemo
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+            HostingEnvironment = env;
         }
 
         public IConfigurationRoot Configuration { get; }
+        private IHostingEnvironment HostingEnvironment{ get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -37,7 +39,7 @@ namespace CustomerDemo
                 options =>
                 {
                     options.OutputFormatters.Add(new Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter());
-                    options.OutputFormatters.Add(new Controllers.CustomerImageFormatter());
+                    options.OutputFormatters.Add(new Controllers.CustomerImageFormatter(HostingEnvironment));
                 }
                 );
         }
