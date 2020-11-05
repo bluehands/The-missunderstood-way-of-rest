@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
+using CustomerDemo.Controllers;
 
 namespace CustomerDemo.Models
 {
     public static class CustomerRepository
     {
         private static readonly Dictionary<int, Customer> s_Customers = new Dictionary<int, Customer>();
+        private static readonly Dictionary<int, List<Move>> s_Moves = new Dictionary<int, List<Move>>();
         static CustomerRepository()
         {
             s_Customers.Add(1, new Customer
@@ -56,6 +59,13 @@ namespace CustomerDemo.Models
                 return new List<Customer>(s_Customers.Values);
             }
         }
+        public static List<Customer> GetAllFavorites()
+        {
+            lock (s_Customers)
+            {
+                return s_Customers.Values.Where(c => c.IsFavorite).ToList();
+            }
+        }
         public static Customer Get(int id)
         {
             lock (s_Customers)
@@ -99,8 +109,33 @@ namespace CustomerDemo.Models
                 s_Customers.Remove(id);
             }
         }
+        public static List<Move> GetAllMoves(int customerId)
+        {
+            lock (s_Moves)
+            {
+                if (s_Moves.TryGetValue(customerId, out List<Move> moves))
+                {
+                    return moves;
+                }
 
+                return new List<Move>();
+            }
+        }
 
-
+        public static int AddMove(in int customerId, Move move)
+        {
+            lock (s_Moves)
+            {
+                move.Id = s_Moves.Count + 1;
+                List<Move> moves;
+                if (!s_Moves.TryGetValue(customerId, out moves))
+                {
+                    moves = new List<Move>();
+                    s_Moves.Add(customerId, moves);
+                }
+                moves.Add(move);
+                return customerId;
+            }
+        }
     }
 }

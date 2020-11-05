@@ -14,8 +14,8 @@ namespace CustomerDemo.Controllers
 {
     public class CustomerImageFormatter : OutputFormatter
     {
-        public IHostingEnvironment HostingEnvironment { get; }
-        public CustomerImageFormatter(IHostingEnvironment hostingEnvironment)
+        public IWebHostEnvironment HostingEnvironment { get; }
+        public CustomerImageFormatter(IWebHostEnvironment hostingEnvironment)
         {
             HostingEnvironment = hostingEnvironment;
             SupportedMediaTypes.Add("image/png");
@@ -30,7 +30,7 @@ namespace CustomerDemo.Controllers
             }
             return false;
         }
-        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
+        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
             var responseStream = context.HttpContext.Response.Body;
             var c = context.Object as Customer;
@@ -40,9 +40,10 @@ namespace CustomerDemo.Controllers
                 var rootPath = Path.Combine(HostingEnvironment.WebRootPath, "Images");
                 var imagePath = Path.Combine(rootPath, c.ImageFile);
                 var buf = File.ReadAllBytes(imagePath);
-                responseStream.Write(buf, 0, buf.Length);
+                await responseStream.WriteAsync(buf, 0, buf.Length);
             }
-            return Task.FromResult(responseStream);
+
+            // return Task.FromResult(responseStream);
 
         }
 

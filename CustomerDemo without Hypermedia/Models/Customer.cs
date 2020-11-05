@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using CustomerDemo.Controllers;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace CustomerDemo.Models
 {
@@ -10,7 +12,8 @@ namespace CustomerDemo.Models
         public string ZipCode { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        
+        [IgnoreDataMember]
+        public bool IsFavorite { get; set; }
         [IgnoreDataMember]
         public string ImageFile { get; set; }
 
